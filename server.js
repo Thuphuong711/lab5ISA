@@ -6,8 +6,6 @@ const messages = require('./lang/en/en');
 
 
 
-const PORT = process.env.PORT || 3000;
-
 const server = http.createServer((req,res) => {
     res.setHeader('Access-Control-Allow-Origin', "*");
     res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST');
@@ -87,6 +85,6 @@ const server = http.createServer((req,res) => {
     }
 });
 
-server.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+server.listen(3000, () => {
+    console.log(`Server is running on port 3000`);
 })

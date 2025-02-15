@@ -2,12 +2,12 @@ const mysql = require('mysql2');
 require('dotenv').config();
 
 const connection = mysql.createConnection({
-    host: process.env.DB_HOST || 'localhost',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASS || '',
-    database: process.env.DB_NAME || 'lab5',
+    host: 'lab5-do-user-18970628-0.d.db.ondigitalocean.com'  || 'localhost',
+    user: 'doadmin' || 'root',
+    password: 'AVNS_snUocoJVRDAnpInn_GM' || 'abc123@',
+    database:  'lab5' || 'defaultdb',
     multipleStatements: false,
-    port: process.env.DB_PORT || 3306,
+    port: 25060 || 3306,
     ssq:{
         rejectUnauthorized: true
     }
