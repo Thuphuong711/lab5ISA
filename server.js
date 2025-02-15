@@ -38,12 +38,14 @@ const server = http.createServer((req,res) => {
                 [name, dateOfBirth],
                 (err, result) => {
                     if(err){
+                        console.error("Insert Error:", err);
                         res.writeHead(500);
                         return res.end(JSON.stringify({
                             error: messages.errors.DB_ERROR
                         }));
                     }
-
+                    
+                    console.log("Insert Success:", result);
                     res.writeHead(201);
                     res.end(JSON.stringify({
                         message: messages.success.PATIENT_ADDED,
