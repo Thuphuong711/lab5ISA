@@ -1,22 +1,19 @@
-import http from 'http';
-import url from 'url';
-// import querystring from 'querystring';
-import connection from './db_config';
-import messages from './lang/en/en';
+const http = require('http');
+const url = require('url');
+// const querystring = require('querystring');
+const connection = require('./db_config');
+const messages = require('./lang/en/en');
 
 
 
 const server = http.createServer((req,res) => {
-    // res.setHeader('Access-Control-Allow-Origin', "*");
-    // res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST');
-    // res.setHeader('Content-Type', "application/json");
+    const parseUrl = url.parse(req.url, true);
 
-    res.setHeader('Access-Control-Allow-Origin', '*');  // Allow all origins
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');  // Ensure OPTIONS is included for preflight requests
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');  // Allow necessary headers
-    res.setHeader('Content-Type', 'application/json');
+    res.setHeader('Access-Control-Allow-Origin', "*");
+    res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST', 'OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-    if(req.method === "POST" && req.url.startsWith("/insert")){
+    if(req.method === "POST" && parseUrl.pathname.startsWith("/insert")){
         // Insert a new patient recorrd
         let body = "";
         req.on('data', (chunk) => {
@@ -39,7 +36,7 @@ const server = http.createServer((req,res) => {
             connection.query(
                 insertQuery,
                 [name, dateOfBirth],
-                (err) => {
+                (err, result) => {
                     if(err){
                         res.writeHead(500);
                         return res.end(JSON.stringify({
@@ -56,8 +53,8 @@ const server = http.createServer((req,res) => {
             )
         })
         // GET SQL request
-    } else if(req.method === "GET" && req.url.startsWith("/sql/")) {
-        const parseUrl = url.parse(req.url, true);
+    } else if(req.method === "GET" && parseUrl.pathname.startsWith("/sql/")) {
+       
         let sqlQuery = decodeURIComponent(parseUrl.pathname.replace("/sql/", ""));
 
         //Block DROP and DELETE queries
