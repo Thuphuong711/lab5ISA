@@ -5,15 +5,21 @@ const connection = require('./db_config');
 const messages = require('./lang/en/en');
 
 
-
 const server = http.createServer((req,res) => {
     const parseUrl = url.parse(req.url, true);
 
     res.setHeader('Access-Control-Allow-Origin', "*");
-    res.setHeader('Access-Control-Allow-Methods', 'GET', 'POST', 'OPTIONS');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
     if(req.method === "POST" && parseUrl.pathname.startsWith("/insert")){
+        //Check if Content-Type is set to application/json
+        if(req.headers['content-type'] !== 'application/json'){
+            res.writeHead(400, {'Content-Type': 'application/json'});
+            return res.end(JSON.stringify({
+                error: messages.errors.INVALID_CONTENT_TYPE
+            }));
+        }
         // Insert a new patient recorrd
         let body = "";
         req.on('data', (chunk) => {
@@ -25,7 +31,7 @@ const server = http.createServer((req,res) => {
             const {name, dateOfBirth} = data;
             
             if(!name || !dateOfBirth){
-                res.writeHead(400);
+                res.writeHead(400, {'Content-Type': 'application/json'});
                 return res.end(JSON.stringify({
                     error: messages.errors.MISSING_FIELDS
                 }));
@@ -33,23 +39,26 @@ const server = http.createServer((req,res) => {
 
             const insertQuery = 
             "INSERT INTO patient (name, dateOfBirth) VALUES (?,?)";
+            console.log("Attempting to insert:", { name, dateOfBirth });
+
             connection.query(
                 insertQuery,
                 [name, dateOfBirth],
                 (err, result) => {
                     if(err){
                         console.error("Insert Error:", err);
-                        res.writeHead(500);
+                        res.writeHead(500, {'Content-Type': 'application/json'});
                         return res.end(JSON.stringify({
                             error: messages.errors.DB_ERROR
                         }));
                     }
                     
                     console.log("Insert Success:", result);
-                    res.writeHead(201);
+                    
+                    res.writeHead(201, {'Content-Type': 'application/json'});
                     res.end(JSON.stringify({
                         message: messages.success.PATIENT_ADDED,
-                        // patientId: result.insertQuery.patientId
+                        patientId: result.insertId
                     }));
                 }
             )
