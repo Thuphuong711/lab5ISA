@@ -11,6 +11,7 @@ const server = http.createServer((req,res) => {
     res.setHeader('Access-Control-Allow-Origin', "*");
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
     res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Content-Type', 'application/json');
 
     if(req.method === "POST" && parseUrl.pathname.startsWith("/insert")){
         //Check if Content-Type is set to application/json
@@ -54,7 +55,7 @@ const server = http.createServer((req,res) => {
                     }
                     
                     console.log("Insert Success:", result);
-                    
+
                     res.writeHead(201, {'Content-Type': 'application/json'});
                     res.end(JSON.stringify({
                         message: messages.success.PATIENT_ADDED,

@@ -1,13 +1,12 @@
 const mysql = require('mysql2');
-require('dotenv').config();
 
 const connection = mysql.createConnection({
-    host: 'lab5-do-user-18970628-0.d.db.ondigitalocean.com' || 'localhost',
-    user: 'doadmin' || 'root',
-    password: 'AVNS_snUocoJVRDAnpInn_GM' || '',
-    database: 'lab5' || 'defaultdb',
+    host: 'lab5-do-user-18970628-0.d.db.ondigitalocean.com',
+    user: 'doadmin',
+    password: 'AVNS_snUocoJVRDAnpInn_GM',
+    database: 'lab5',
     multipleStatements: false,
-    port: 25060 || 3306,
+    port: 25060,
     ssq:{
         rejectUnauthorized: true
     }
@@ -39,3 +38,4 @@ connection.query(createTableQuery, (err, result) => {
     }
 })
 module.exports = connection;
+
